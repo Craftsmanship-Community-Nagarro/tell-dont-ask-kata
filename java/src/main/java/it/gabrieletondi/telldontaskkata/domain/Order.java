@@ -4,6 +4,7 @@ import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.CREATED;
 import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.REJECTED;
 import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.SHIPPED;
 
+import it.gabrieletondi.telldontaskkata.service.ShipmentService;
 import it.gabrieletondi.telldontaskkata.useCase.*;
 
 import java.math.BigDecimal;
@@ -65,7 +66,7 @@ public class Order {
 		this.id = id;
 	}
 
-	public void verifyShippable() {
+	private void verifyShippable() {
 		if (getStatus().equals(CREATED) || getStatus().equals(REJECTED)) {
 			throw new OrderCannotBeShippedException();
 		}
@@ -97,5 +98,13 @@ public class Order {
 		if (getStatus().equals(SHIPPED)) {
 			throw new ShippedOrdersCannotBeChangedException();
 		}
+	}
+
+	public void ship(ShipmentService shipmentService) {
+		verifyShippable();
+
+		shipmentService.ship(this);
+
+		setStatus(SHIPPED);
 	}
 }
