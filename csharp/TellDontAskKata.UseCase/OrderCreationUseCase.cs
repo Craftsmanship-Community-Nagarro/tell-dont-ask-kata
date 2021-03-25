@@ -20,7 +20,6 @@ namespace TellDontAskKata.UseCase
         public void Run(SellItemsRequest request)
         {
             Order order = new Order();
-            
 
             int numberOfFoodItems = 0;
 
@@ -32,39 +31,37 @@ namespace TellDontAskKata.UseCase
                 {
                     throw new UnknownProductException();
                 }
-                else
+                decimal unitaryTax = product.CalculateUnitaryTax(); 
+                decimal unitaryTaxedAmount = Math.Round(product.GetPrice() + unitaryTax, 2, MidpointRounding.AwayFromZero);
+                decimal taxedAmount = Math.Round(unitaryTaxedAmount * itemRequest.GetQuantity(), 2, MidpointRounding.AwayFromZero);
+                decimal taxAmount = Math.Round(unitaryTax * itemRequest.GetQuantity(), 2, MidpointRounding.AwayFromZero);
+
+                OrderItem orderItem = new OrderItem();
+                orderItem.SetProduct(product);
+                orderItem.SetQuantity(itemRequest.GetQuantity());
+                orderItem.SetTax(taxAmount);
+                orderItem.SetTaxedAmount(taxedAmount);
+                order.GetItems().Add(orderItem);
+
+                foreach (OrderItem item in order.GetItems())
                 {
-                    decimal unitaryTax = Math.Round((product.GetPrice() / 100) * (product.GetCategory().GetTaxPercentage()), 2, MidpointRounding.AwayFromZero);
-                    decimal unitaryTaxedAmount = Math.Round(product.GetPrice() + unitaryTax, 2, MidpointRounding.AwayFromZero);
-                    decimal taxedAmount = Math.Round(unitaryTaxedAmount * itemRequest.GetQuantity(), 2, MidpointRounding.AwayFromZero);
-                    decimal taxAmount = Math.Round(unitaryTax * itemRequest.GetQuantity(), 2, MidpointRounding.AwayFromZero);
-
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.SetProduct(product);
-                    orderItem.SetQuantity(itemRequest.GetQuantity());
-                    orderItem.SetTax(taxAmount);
-                    orderItem.SetTaxedAmount(taxedAmount);
-                    order.GetItems().Add(orderItem);
-
-                    foreach (OrderItem item in order.GetItems())
+                    if (item.GetProduct().GetCategory().GetName().Equals("food"))
                     {
-                        if (item.GetProduct().GetCategory().GetName().Equals("food"))
-                        {
-                            numberOfFoodItems += item.getQuantity();
-                        }
+                        numberOfFoodItems += item.getQuantity();
                     }
-
-                    if (numberOfFoodItems > 100)
-                    {
-                        throw new MaximumNumberOfFoodItemsExceeded();
-                    }
-
-                    order.SetTotal(order.GetTotal() + taxedAmount);
-                    order.SetTax(order.GetTax() + taxAmount);
                 }
+
+                if (numberOfFoodItems > 100)
+                {
+                    throw new MaximumNumberOfFoodItemsExceeded();
+                }
+
+                order.SetTotal(order.GetTotal() + taxedAmount);
+                order.SetTax(order.GetTax() + taxAmount);
             }
 
             orderRepository.Save(order);
         }
+
     }
 }
