@@ -21,6 +21,18 @@ namespace TellDontAskKata.Domain
             SetTax((decimal)0.0);
         }
 
+        public void AddItem(OrderItem item)
+        {
+            GetItems().Add(item);
+
+            if (HasTooManyFoodItems())
+            {
+                throw new MaximumNumberOfFoodItemsExceeded();
+            }
+
+            SetTotal(GetTotal() + item.GetTaxedAmount());
+            SetTax(GetTax() + item.GetTax());
+        }
 
         public bool HasTooManyFoodItems()
         {

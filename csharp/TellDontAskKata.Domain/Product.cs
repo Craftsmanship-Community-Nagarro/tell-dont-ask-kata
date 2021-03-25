@@ -13,6 +13,11 @@ namespace TellDontAskKata.Domain
             return Math.Round((GetPrice() / 100) * (GetCategory().GetTaxPercentage()), 2, MidpointRounding.AwayFromZero);
         }
 
+        public decimal CalculateUnitaryTaxedAmount(decimal unitaryTax)
+        {
+            return Math.Round(GetPrice() + unitaryTax, 2, MidpointRounding.AwayFromZero);
+        }
+
         public string GetName()
         {
             return name;
