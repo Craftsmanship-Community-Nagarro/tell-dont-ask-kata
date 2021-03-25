@@ -19,7 +19,23 @@ namespace TellDontAskKata.Domain
             SetTotal((decimal)0.0);
             SetCurrency("EUR");
             SetTax((decimal)0.0);
-        }   
+        }
+
+
+        public bool HasTooManyFoodItems()
+        {
+            int numberOfFoodItems = 0;
+            foreach (OrderItem item in GetItems())
+            {
+                if (item.GetProduct().GetCategory().GetName().Equals("food"))
+                {
+                    numberOfFoodItems += item.getQuantity();
+                }
+            }
+
+            return numberOfFoodItems > 100;
+        }
+
         public decimal GetTotal()
         {
             return total;
