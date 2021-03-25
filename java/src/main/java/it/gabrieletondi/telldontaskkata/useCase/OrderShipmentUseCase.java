@@ -17,12 +17,12 @@ public class OrderShipmentUseCase {
     public void run(OrderShipmentRequest request) {
         final Order order = orderRepository.getById(request.getOrderId());
 
-
         order.verifyShippable();
 
         shipmentService.ship(order);
 
         order.setStatus(OrderStatus.SHIPPED);
+
         orderRepository.save(order);
     }
 
