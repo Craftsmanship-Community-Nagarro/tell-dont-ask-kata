@@ -1,4 +1,6 @@
-﻿namespace TellDontAskKata.Domain
+﻿using System;
+
+namespace TellDontAskKata.Domain
 {
     public class OrderItem
     {
@@ -6,6 +8,18 @@
         private int quantity;
         private decimal taxedAmount;
         private decimal tax;
+
+        public OrderItem(Product product, int quantity)
+        {
+            decimal unitaryTax = product.CalculateUnitaryTax();
+            decimal taxedAmount = Math.Round(product.CalculateUnitaryTaxedAmount(unitaryTax) * quantity, 2, MidpointRounding.AwayFromZero);
+            decimal taxAmount = Math.Round(unitaryTax * quantity, 2, MidpointRounding.AwayFromZero);
+
+            SetProduct(product);
+            SetQuantity(quantity);
+            SetTax(taxAmount);
+            SetTaxedAmount(taxedAmount);
+        }
 
         public Product GetProduct()
         {

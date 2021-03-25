@@ -29,29 +29,12 @@ namespace TellDontAskKata.UseCase
                 {
                     throw new UnknownProductException();
                 }
-                decimal unitaryTax = product.CalculateUnitaryTax(); 
-                decimal unitaryTaxedAmount = Math.Round(product.GetPrice() + unitaryTax, 2, MidpointRounding.AwayFromZero);
-                decimal taxedAmount = Math.Round(unitaryTaxedAmount * itemRequest.GetQuantity(), 2, MidpointRounding.AwayFromZero);
-                decimal taxAmount = Math.Round(unitaryTax * itemRequest.GetQuantity(), 2, MidpointRounding.AwayFromZero);
 
-                OrderItem orderItem = new OrderItem();
-                orderItem.SetProduct(product);
-                orderItem.SetQuantity(itemRequest.GetQuantity());
-                orderItem.SetTax(taxAmount);
-                orderItem.SetTaxedAmount(taxedAmount);
-                order.GetItems().Add(orderItem);
-
-                if (order.HasTooManyFoodItems())
-                {
-                    throw new MaximumNumberOfFoodItemsExceeded();
-                }
-
-                order.SetTotal(order.GetTotal() + taxedAmount);
-                order.SetTax(order.GetTax() + taxAmount);
+                OrderItem orderItem = new OrderItem(product, itemRequest.GetQuantity());
+                order.AddItem(orderItem);
             }
 
             orderRepository.Save(order);
         }
-
     }
 }
