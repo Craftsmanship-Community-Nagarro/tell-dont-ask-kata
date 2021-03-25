@@ -4,8 +4,8 @@ import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.CREATED;
 import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.REJECTED;
 import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.SHIPPED;
 
-import it.gabrieletondi.telldontaskkata.useCase.OrderCannotBeShippedException;
-import it.gabrieletondi.telldontaskkata.useCase.OrderCannotBeShippedTwiceException;
+import it.gabrieletondi.telldontaskkata.useCase.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 
