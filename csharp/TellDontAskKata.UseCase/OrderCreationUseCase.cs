@@ -20,11 +20,7 @@ namespace TellDontAskKata.UseCase
         public void Run(SellItemsRequest request)
         {
             Order order = new Order();
-            order.SetStatus(OrderStatus.Created);
-            order.SetItems(new List<OrderItem>());
-            order.SetCurrency("EUR");
-            order.SetTotal((decimal)0.0);
-            order.SetTax((decimal)0.0);
+            
 
             int numberOfFoodItems = 0;
 

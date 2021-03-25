@@ -12,6 +12,14 @@ namespace TellDontAskKata.Domain
         private OrderStatus status;
         private int id;
 
+        public Order()
+        {
+            SetStatus(OrderStatus.Created);
+            SetItems(new List<OrderItem>());
+            SetTotal((decimal)0.0);
+            SetCurrency("EUR");
+            SetTax((decimal)0.0);
+        }   
         public decimal GetTotal()
         {
             return total;
